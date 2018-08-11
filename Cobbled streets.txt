@@ -1,0 +1,83 @@
+#include <iostream>
+#include<bits/stdc++.h>
+using namespace std;
+struct edge{
+    int v;
+    int w;
+};
+bool operator<(edge a,edge b)
+{
+    return a.w>b.w;
+}
+int  ff(vector<edge>g[],int n)
+{
+    bool visit[n+1];
+    int i,j;
+    for(i=0;i<=n;i++)
+    {
+        visit[i]=false;
+    }
+    //cout<<"x";
+    priority_queue<edge>q;
+    queue<edge>mst;
+    for(i=1;i<=n;i++)
+    {
+        if(g[i].size()>0)
+        {
+            q.push((edge){i,0});
+            break;
+        }
+    }
+   // cout<<"x";
+    while(!q.empty())
+    {
+        //cout<<"x";
+        edge p=q.top();
+        q.pop();
+        if(!visit[p.v])
+        {
+            visit[p.v]=true;
+            mst.push(p);
+            for(i=0;i<g[p.v].size();i++)
+            {
+                edge k=g[p.v][i];
+                if(!visit[k.v])
+                {
+                    q.push(k);
+                }
+            }
+        }
+    }int sum=0;
+//cout<<"x";
+    while(!mst.empty())
+    {
+        //cout<<"x";
+        sum+=mst.front().w;
+        mst.pop();
+    }
+    //cout<<"x";
+return sum;
+}
+int main()
+{
+    //cout << "Hello world!" << endl;
+    int t,i,j,k,m,n,p,a,b,c;
+    cin>>t;
+    while(t--)
+    {
+        cin>>p>>n>>m;
+        vector<edge>g[n+1];
+        for(i=0;i<m;i++)
+        {
+            cin>>a>>b>>c;
+            g[a].push_back((edge){b,c});
+            g[b].push_back((edge){a,c});
+        }
+       // cout<<"x";
+        int sum=ff(g,n);
+        cout<<sum*p<<"\n";
+        //cout<<"x";
+
+    }
+    return 0;
+}
