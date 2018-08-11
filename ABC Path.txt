@@ -1,0 +1,63 @@
+#include <iostream>
+#include<bits/stdc++.h>
+using namespace std;
+char a[55][55];
+int visit[55][55];
+int co=0;
+void dfs(int r,int c,int d,int n,int m)
+{
+    co=max(co,d);
+    int i,j,k;
+    //cout<<"x";
+    int rr[8]={-1,-1,-1,0,0,1,1,1};
+    int cc[8]={-1,0,1,-1,1,-1,0,1};
+    for(i=0;i<8;i++)
+    {
+       int tempr=r+rr[i];
+        int tempc=c+cc[i];
+        if((tempr>=0&&tempr<n)&&(tempc>=0&&tempc<m)&&!visit[tempr][tempc])
+        {
+            if(a[tempr][tempc]==a[r][c]+1)
+            {
+                visit[tempr][tempc]=1;
+                dfs(tempr,tempc,d+1,n,m);
+            }
+        }
+    }
+}
+int main()
+{
+    //cout << "Hello world!" << endl;
+    int t,i,j,k,mm=0,n,m;
+    cin>>n>>m;
+    while(n&&m)
+    {
+        mm++;co=0;
+        //cout<<"a";
+        string s;
+       for(i=0;i<n;i++)
+       {
+           cin>>s;
+           for(j=0;j<s.length();j++)
+           {
+               a[i][j]=s[j];
+               visit[i][j]=0;
+           }
+       }
+      // cout<<"y";
+       for(i=0;i<n;i++)
+       {
+           for(j=0;j<m;j++)
+           {
+               if(a[i][j]=='A')
+               {
+                   visit[i][j]=1;
+                   dfs(i,j,1,n,m);
+               }
+           }
+       }
+        printf("Case %d: %d\n",mm,co);
+        cin>>n>>m;
+    }
+    return 0;
+}
