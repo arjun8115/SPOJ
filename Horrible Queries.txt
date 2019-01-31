@@ -1,0 +1,101 @@
+#include <iostream>
+#include<bits/stdc++.h>
+
+using namespace std;
+#define ll long long int
+ll tree[500000],lazy[500000];
+void update(ll node,ll a,ll b,ll i,ll j,ll val)
+{
+    if(lazy[node])
+    {
+        tree[node]+=lazy[node];
+        if(a!=b)
+        {
+            ll range= b-a+1;
+            ll mid=(a+b)/2;
+            lazy[2*node+1]+=(lazy[node]/range)*(mid-a+1);
+            lazy[2*node+2]+=(lazy[node]/range)*(b-mid);
+        }
+        lazy[node]=00;
+    }
+    if(a>b||a>j||b<i)
+    {
+        return;
+    }
+    if(a>=i&&b<=j)
+    {
+        ll range =b-a+1;
+        ll mid=(a+b)/2;
+        tree[node]+=(range*val);
+        if(a!=b)
+        {
+            lazy[2*node+1]+=(val*(mid-a+1));
+            lazy[2*node+2]+=(val*(b-mid));
+        }
+        return;
+    }
+    ll mid =(a+b)/2;
+    update(2*node+1,a,mid,i,j,val);
+    update(2*node+2,mid+1,b,i,j,val);
+    tree[node]=tree[2*node+1]+tree[2*node+2];
+
+}
+ll query(ll node,ll a,ll b,ll i,ll j)
+{
+    if(a>b||a>j||i>b)
+    {
+        return 0;
+    }
+    if(lazy[node])
+    {
+        tree[node]+=lazy[node];
+        if(a!=b)
+        {
+            ll mid=(a+b)/2;
+            ll range = b-a+1;
+            lazy[2*node+1]+=(lazy[node]/range)*(mid-a+1);
+            lazy[2*node+2]+=(lazy[node]/range)*(b-mid);
+        }
+        lazy[node]=0;
+    }
+    if(a>=i&&b<=j)
+    {
+        return tree[node];
+    }
+    ll mid=(a+b)/2;
+    ll r1=query(2*node+1,a,mid,i,j);
+    ll r2=query(2*node+2,mid+1,b,i,j);
+    return (r1+r2);
+}
+int main()
+{
+    //cout << "Hello world!" << endl;
+ll t,i,j,k,m,n;
+cin>>t;
+while(t--)
+{
+    for(i=0;i<500000;i++)
+    {
+        lazy[i]=0;
+        tree[i]=0;
+    }
+    cin>>n>>m;
+    while(m--)
+    {
+        ll x,y,z,e;
+        cin>>e;
+        if(!e)
+        {
+            cin>>x>>y>>z;
+            update(0,0,n-1,x-1,y-1,z);
+        }
+        else
+        {
+            cin>>x>>y;
+            ll ans=query(0,0,n-1,x-1,y-1);
+            cout<<ans<<"\n";
+        }
+    }
+}
+    return 0;
+}
